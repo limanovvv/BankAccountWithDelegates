@@ -1,0 +1,14 @@
+/Users/valero/RiderProjects/BankAccountWithDelegates/BankAccountWithDelegates/bin/Debug/net8.0/BankAccountWithDelegates
+/Users/valero/RiderProjects/BankAccountWithDelegates/BankAccountWithDelegates/bin/Debug/net8.0/BankAccountWithDelegates.deps.json
+/Users/valero/RiderProjects/BankAccountWithDelegates/BankAccountWithDelegates/bin/Debug/net8.0/BankAccountWithDelegates.runtimeconfig.json
+/Users/valero/RiderProjects/BankAccountWithDelegates/BankAccountWithDelegates/bin/Debug/net8.0/BankAccountWithDelegates.dll
+/Users/valero/RiderProjects/BankAccountWithDelegates/BankAccountWithDelegates/bin/Debug/net8.0/BankAccountWithDelegates.pdb
+/Users/valero/RiderProjects/BankAccountWithDelegates/BankAccountWithDelegates/obj/Debug/net8.0/BankAccountWithDelegates.GeneratedMSBuildEditorConfig.editorconfig
+/Users/valero/RiderProjects/BankAccountWithDelegates/BankAccountWithDelegates/obj/Debug/net8.0/BankAccountWithDelegates.AssemblyInfoInputs.cache
+/Users/valero/RiderProjects/BankAccountWithDelegates/BankAccountWithDelegates/obj/Debug/net8.0/BankAccountWithDelegates.AssemblyInfo.cs
+/Users/valero/RiderProjects/BankAccountWithDelegates/BankAccountWithDelegates/obj/Debug/net8.0/BankAccountWithDelegates.csproj.CoreCompileInputs.cache
+/Users/valero/RiderProjects/BankAccountWithDelegates/BankAccountWithDelegates/obj/Debug/net8.0/BankAccountWithDelegates.dll
+/Users/valero/RiderProjects/BankAccountWithDelegates/BankAccountWithDelegates/obj/Debug/net8.0/refint/BankAccountWithDelegates.dll
+/Users/valero/RiderProjects/BankAccountWithDelegates/BankAccountWithDelegates/obj/Debug/net8.0/BankAccountWithDelegates.pdb
+/Users/valero/RiderProjects/BankAccountWithDelegates/BankAccountWithDelegates/obj/Debug/net8.0/BankAccountWithDelegates.genruntimeconfig.cache
+/Users/valero/RiderProjects/BankAccountWithDelegates/BankAccountWithDelegates/obj/Debug/net8.0/ref/BankAccountWithDelegates.dll
