@@ -1,4 +1,4 @@
-namespace Calculator_with_delegates_and_lambdas;
+namespace Calculator;
 
 public delegate double Operation(double a, double b);
 
