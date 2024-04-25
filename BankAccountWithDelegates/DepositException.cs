@@ -8,7 +8,4 @@ public class DepositException: Exception
     {
         Sum = sum;
     }
-    
-    
-    
 }

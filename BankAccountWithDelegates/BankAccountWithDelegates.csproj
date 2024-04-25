@@ -7,4 +7,10 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Compile Include="..\..\Calculator_with_delegates\Calculator_with_delegates_and_lambdas\Program.cs">
+        <Link>Program.cs</Link>
+      </Compile>
+    </ItemGroup>
+
 </Project>

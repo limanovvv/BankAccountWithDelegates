@@ -1,8 +1,8 @@
 ﻿namespace BankAccountWithDelegates;
 
-class Program
+class ProgramBA
 {
-    static void Main()
+    public void Execute()
     {
         BankAccountManager manager = new BankAccountManager();
 
