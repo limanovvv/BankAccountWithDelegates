@@ -1,4 +1,8 @@
 ﻿/.vs
+/BankAccountWithDelegates/bin
+/BankAccountWithDelegates/obj
+/BankAccountWithDelegates/bin/
+/BankAccountWithDelegates/obj/
 /BankAccountWithDelegates/bin/*
 /BankAccountWithDelegates/obj/*
 /BankAccountWithDelegates/bin/Debug/net8.0/BankAccountWithDelegates.dll
