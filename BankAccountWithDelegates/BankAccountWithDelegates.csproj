@@ -11,6 +11,23 @@
       <Compile Include="..\..\Calculator_with_delegates\Calculator_with_delegates_and_lambdas\Program.cs">
         <Link>Program.cs</Link>
       </Compile>
+      <Compile Remove="baFromGithubNewBranch\**" />
+      <Compile Remove="BA\a.cs" />
+      <Compile Remove="Calculator\NewCalc.cs" />
+      <Compile Remove="ILogger.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="baFromGithubNewBranch\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="baFromGithubNewBranch\**" />
+      <None Remove="Fixes.patch" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     </ItemGroup>
 
 </Project>

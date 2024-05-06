@@ -1,6 +1,6 @@
-﻿namespace Calculator;
+﻿namespace BankAccountWithDelegates.Calculator;
 
-public class CalculatorProgramm
+public static class CalculatorProgram
 {
     public static void Execute()
     {

@@ -1,14 +1,14 @@
-namespace BankAccountWithDelegates;
+namespace BankAccountWithDelegates.BA;
 
 /// <summary>
 /// класс банковсикй аккаунт 
 /// </summary>
-class BankAccount
+public class BankAccount
 {
     /// <summary>
     /// номер счета 
     /// </summary>
-    public int AccountNumber { get; set; }
+    public long AccountNumber { get; set; }
     
     /// <summary>
     /// имя фамилия владельца счета

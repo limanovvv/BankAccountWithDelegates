@@ -1,4 +1,4 @@
-namespace BankAccountWithDelegates;
+namespace BankAccountWithDelegates.CreatedExceptions;
 
 public class DepositException: Exception
 {

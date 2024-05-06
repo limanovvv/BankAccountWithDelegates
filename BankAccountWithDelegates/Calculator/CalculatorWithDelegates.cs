@@ -1,8 +1,8 @@
-namespace Calculator;
+namespace BankAccountWithDelegates.Calculator;
 
 public delegate double Operation(double a, double b);
 
-public class CalculatorWithDelegates
+public static class CalculatorWithDelegates
 {
 
     /// <summary>

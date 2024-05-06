@@ -1,4 +1,4 @@
-namespace BankAccountWithDelegates;
+namespace BankAccountWithDelegates.CreatedExceptions;
 
 /// <summary>
 /// создаем свой тип ошибки счета

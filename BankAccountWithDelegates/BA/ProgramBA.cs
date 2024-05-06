@@ -1,17 +1,23 @@
-﻿namespace BankAccountWithDelegates;
+﻿using BankAccountWithDelegates.CreatedExceptions;
+
+namespace BankAccountWithDelegates.BA;
 
 class ProgramBA
 {
-    public void Execute()
+    public static void Execute()
     {
         BankAccountManager manager = new BankAccountManager();
 
         manager.CreateAccount("Alice", 1000);
         manager.CreateAccount("Mark", 1000);
-        manager.Deposit(1, 500);
+
+        long firstAccountNumber = manager.accounts[0].AccountNumber;
+        long secondAccountNumber = manager.accounts[1].AccountNumber;
+        
+        manager.Deposit(firstAccountNumber, 500);
         try
         {
-            manager.Withdraw(1, 200);
+            manager.Withdraw(firstAccountNumber, 200);
         }
         catch (AccountNumberException accountNumberException)
         {
@@ -23,9 +29,9 @@ class ProgramBA
             Console.WriteLine($"Ваш баланс:  {insufficientFundsException.Sum}");
         }
         
-        manager.Transfer(1, 2, 300);
+        manager.Transfer(firstAccountNumber, secondAccountNumber, 300);
 
-        manager.PrintBalance(1);
-        manager.PrintBalance(2);
+        manager.PrintBalance(firstAccountNumber);
+        manager.PrintBalance(secondAccountNumber);
     }
 }
