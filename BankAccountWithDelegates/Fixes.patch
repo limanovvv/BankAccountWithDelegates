@@ -1,0 +1,128 @@
+Subject: [PATCH] Fixes
+---
+Index: .gitignore
+===================================================================
+diff --git a/.gitignore b/.gitignore
+--- a/.gitignore	(revision e06d8adb0f705fe1324a302f34938ddef66f7030)
++++ b/.gitignore	(revision c02b14c8b0aac47491a5da5df93275c6308d3438)
+@@ -1,1 +1,7 @@
+ /.vs
++/bin/
++/obj/
++/bin
++/obj
++bin/
++obj/
+\ No newline at end of file
+Index: BankAccountWithDelegates/Calculator/CalculatorProgramm.cs
+===================================================================
+diff --git a/BankAccountWithDelegates/Calculator/CalculatorProgramm.cs b/BankAccountWithDelegates/Calculator/CalculatorProgramm.cs
+new file mode 100644
+--- /dev/null	(revision c02b14c8b0aac47491a5da5df93275c6308d3438)
++++ b/BankAccountWithDelegates/Calculator/CalculatorProgramm.cs	(revision c02b14c8b0aac47491a5da5df93275c6308d3438)
+@@ -0,0 +1,35 @@
++namespace Calculator;
++
++public class CalculatorProgramm
++{
++    public static void Execute()
++    {
++        Console.WriteLine("Введите первое число:");
++        var number1 = Convert.ToDouble(Console.ReadLine());
++
++        Console.WriteLine("Выберите операцию + - * / ");
++        var operation = Convert.ToChar(Console.ReadLine());
++
++        Console.WriteLine("Введите второе число:");
++        var number2 = Convert.ToDouble(Console.ReadLine());
++
++        switch (operation)
++        {
++            case '+':
++                CalculatorWithDelegates.Do(number1, number2, CalculatorWithDelegates.Add);
++                break;
++            case '-':
++                CalculatorWithDelegates.Do(number1, number2, CalculatorWithDelegates.Substract);
++                break;
++            case '*':
++                CalculatorWithDelegates.Do(number1, number2, CalculatorWithDelegates.Multiply);
++                break;
++            case '/':
++                CalculatorWithDelegates.Do(number1, number2, CalculatorWithDelegates.Divide);
++                break;
++            default:
++                Console.WriteLine("Введите корректную операцию + - * / ");
++                break;
++        }
++    }
++}
+\ No newline at end of file
+Index: BankAccountWithDelegates/CalculatorWithDelegates.cs
+===================================================================
+diff --git a/BankAccountWithDelegates/CalculatorWithDelegates.cs b/BankAccountWithDelegates/Calculator/CalculatorWithDelegates.cs
+rename from BankAccountWithDelegates/CalculatorWithDelegates.cs
+rename to BankAccountWithDelegates/Calculator/CalculatorWithDelegates.cs
+--- a/BankAccountWithDelegates/CalculatorWithDelegates.cs	(revision e06d8adb0f705fe1324a302f34938ddef66f7030)
++++ b/BankAccountWithDelegates/Calculator/CalculatorWithDelegates.cs	(revision c02b14c8b0aac47491a5da5df93275c6308d3438)
+@@ -1,4 +1,4 @@
+-namespace Calculator_with_delegates_and_lambdas;
++namespace Calculator;
+ 
+ public delegate double Operation(double a, double b);
+ 
+Index: BankAccountWithDelegates/ILogger.cs
+===================================================================
+diff --git a/BankAccountWithDelegates/ILogger.cs b/BankAccountWithDelegates/ILogger.cs
+new file mode 100644
+--- /dev/null	(revision c02b14c8b0aac47491a5da5df93275c6308d3438)
++++ b/BankAccountWithDelegates/ILogger.cs	(revision c02b14c8b0aac47491a5da5df93275c6308d3438)
+@@ -0,0 +1,12 @@
++using System;
++using System.Collections.Generic;
++using System.Linq;
++using System.Text;
++using System.Threading.Tasks;
++
++namespace BankAccountWithDelegates
++{
++    internal interface ILogger
++    {
++    }
++}
+Index: BankAccountWithDelegates/MyMergeClass.cs
+===================================================================
+diff --git a/BankAccountWithDelegates/MyMergeClass.cs b/BankAccountWithDelegates/MyMergeClass.cs
+deleted file mode 100644
+--- a/BankAccountWithDelegates/MyMergeClass.cs	(revision e06d8adb0f705fe1324a302f34938ddef66f7030)
++++ /dev/null	(revision e06d8adb0f705fe1324a302f34938ddef66f7030)
+@@ -1,29 +0,0 @@
+-using Calculator_with_delegates_and_lambdas;
+-
+-namespace BankAccountWithDelegates;
+-
+-
+-
+-
+-
+-public class MyMergeClass
+-{
+-    public static void Main()
+-    {
+-        Console.WriteLine("Выберите программу на выполнение 1 - калькулятор 2 - банковский аккаунт");
+-        int choise = int.Parse(Console.ReadLine());
+-        switch (choise)
+-        {
+-            case 1:
+-                CalculatorWithDelegates
+-            
+-                break;
+-            case 2:
+-                ProgramBA.
+-                break;
+-            default:
+-                
+-                break;
+-        }
+-    }
+-}
+\ No newline at end of file
