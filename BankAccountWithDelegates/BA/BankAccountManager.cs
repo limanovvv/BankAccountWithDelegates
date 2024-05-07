@@ -13,16 +13,36 @@ public delegate void BankOperation(long accountNumber, double amount);
 /// </summary>
 public class BankAccountManager
 {
-    
-    /// <summary>
-    /// приватный лист для хранения аккаунтов
-    /// </summary>
-    public List<BankAccount> accounts = new List<BankAccount>();
-
     /// <summary>
     /// имя json файла для хранения аккаунтов
     /// </summary>
     private const string JsonFile = "jsonForBankAccounts";
+
+    /// <summary>
+    /// лист для хранения аккаунтов
+    /// </summary>
+    public static List<BankAccount>? accounts {
+        get
+        {
+            string str = File.ReadAllText(JsonFile);
+
+            List<BankAccount>? list;
+            
+            try
+            {
+                list = JsonConvert.DeserializeObject<List<BankAccount>>(str);
+
+            }
+            catch (JsonException)
+            {
+                return null;
+            }
+
+            return list;
+        }}
+    
+    
+   
     
     /// <summary>
     /// длина банковского счета
@@ -46,15 +66,26 @@ public class BankAccountManager
                 Balance = initialBalance,
                 
             };
+            BankAccountLogger.LogInfo("в методе CreateAccount первым делом создался новый объект BankAccount");
 
             string json = JsonConvert.SerializeObject(newAccount);
+            BankAccountLogger.LogInfo("сериализуем этот новый объект в json-сроку");
+            
             File.WriteAllText(JsonFile, json);
+            BankAccountLogger.LogInfo("записываем в файл JsonFile json-строку");
 
             accounts.Add(newAccount);
+            BankAccountLogger.LogInfo("добавляем в лист новый объект");
         }
-        catch (Exception e)
+        catch (JsonException e)
         {
-            Console.WriteLine(e);
+            BankAccountLogger.LogError($"Произошла ошибка при сериализации в JSON в методе CreateAccount: {e.Message}");
+            throw;
+        }
+        catch (IOException e)
+        {
+            BankAccountLogger.LogError($"Произошла ошибка ввода-вывода в методе CreateAccount: {e.Message}");
+            throw;
         }
     } 
     
@@ -72,17 +103,30 @@ public class BankAccountManager
             BankOperation deposit = (accNum, amt) =>
             {
                 var account = accounts.Find(acc => acc.AccountNumber == accNum);
-                if (account != null) account.Balance += amt;
+                if (account != null)
+                {
+                    account.Balance += amt;
+
+                    string json = "<изменение баланса счета - зачисление>" + JsonConvert.SerializeObject(account);
+                    File.WriteAllText(JsonFile, json);
+                    
+                    BankAccountLogger.LogInfo($"Зачисление средств на счет\n номер аккаунта: {accountNumber}\n сумма зачисления {amount}\n баланс {account.Balance}");
+                }
                 
-                BankAccountLogger.LogInfo($"Зачисление средств на счет\n номер аккаунта: {accountNumber}\n сумма зачисления {amount}\n баланс {account.Balance}");
             };
 
             deposit(accountNumber, amount);
             
         }
-        catch (Exception e)
+        catch (JsonException e)
         {
-            Console.WriteLine(e);
+            BankAccountLogger.LogError($"Произошла ошибка при сериализации в JSON в методе Deposit: {e.Message}");
+            throw;
+        }
+        catch (IOException e)
+        {
+            BankAccountLogger.LogError($"Произошла ошибка ввода-вывода в методе Deposit: {e.Message}");
+            throw;
         }
     }
     
@@ -117,6 +161,10 @@ public class BankAccountManager
                     else
                     {
                         account.Balance -= amount;
+                        
+                        string json = "<изменение баланса счета - снятие>" + JsonConvert.SerializeObject(account);
+                        File.WriteAllText(JsonFile, json);
+                        
                         BankAccountLogger.LogInfo($"Снятие средств со счета\n номер аккаунта: {accountNumber}\n сумма снятия {amount}\n баланс {account.Balance}");
                     }
 

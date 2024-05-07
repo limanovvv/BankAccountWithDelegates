@@ -22,9 +22,9 @@ public class TestBankAccount
 
         manager.CreateAccount("Alice", 1000);
 
-        double actualResult1 = manager.accounts[0].Balance;
+        double actualResult1 = BankAccountManager.accounts[0].Balance;
 
-        Assert.That(manager.accounts.Count, Is.EqualTo(1));
+        Assert.That(BankAccountManager.accounts.Count, Is.EqualTo(1));
     }
     
     [Test]
@@ -36,8 +36,8 @@ public class TestBankAccount
         manager.CreateAccount("Alice", 1000);
         manager.CreateAccount("Mark", 1000);
 
-        string actualResult1 = manager.accounts[0].OwnerName;
-        string actualResult2 = manager.accounts[1].OwnerName;
+        string actualResult1 = BankAccountManager.accounts[0].OwnerName;
+        string actualResult2 = BankAccountManager.accounts[1].OwnerName;
         
 
         Assert.AreEqual("Alice", actualResult1);
