@@ -16,7 +16,7 @@ public class BankAccountManager
     /// <summary>
     /// имя json файла для хранения аккаунтов
     /// </summary>
-    private const string JsonFile = "jsonForBankAccounts";
+    public const string JsonFile = "jsonForBankAccounts";
 
     /// <summary>
     /// лист для хранения аккаунтов
