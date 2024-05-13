@@ -16,34 +16,41 @@ public class BankAccountManager
     /// <summary>
     /// имя json файла для хранения аккаунтов
     /// </summary>
-    public const string JsonFile = "jsonForBankAccounts";
+    public const string JsonFile = "jsonForBankAccounts.json";
 
     /// <summary>
     /// лист для хранения аккаунтов
     /// </summary>
-    public static List<BankAccount>? accounts {
+    public static List<BankAccount>? accounts
+    {
         get
         {
-            string str = File.ReadAllText(JsonFile);
-
             List<BankAccount>? list;
-            
-            try
-            {
-                list = JsonConvert.DeserializeObject<List<BankAccount>>(str);
 
-            }
-            catch (JsonException)
+            if (File.Exists(JsonFile))
             {
-                return null;
+                try
+                {
+                    string str = File.ReadAllText(JsonFile);
+                    list = JsonConvert.DeserializeObject<List<BankAccount>>(str);
+                }
+                catch (JsonException)
+                {
+                    list = new List<BankAccount>();
+                }
+            }
+            else
+            {
+                list = new List<BankAccount>();
             }
 
             return list;
-        }}
-    
-    
-   
-    
+        }
+    }
+
+
+
+
     /// <summary>
     /// длина банковского счета
     /// по заданию равная 12

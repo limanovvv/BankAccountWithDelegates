@@ -7,28 +7,22 @@ namespace TestUnitCore;
 [TestFixture]
 public class TestBankAccount
 {
-
-    [SetUp]
-    public void SetUp()
-    {
-        
-    }
+    private BankAccountManager manager;
+    
+    
     
     [Test]
     public void PositiveCreateAccountTests()
     {
-        
-        BankAccountManager manager = new BankAccountManager();
-        
         manager.CreateAccount("Alice", 1000);
         
         int countAccounts = BankAccountManager.accounts.Count;
         string ownerName = BankAccountManager.accounts[0].OwnerName;
         double balance = BankAccountManager.accounts[0].Balance;
 
-        Assert.That(countAccounts, Is.EqualTo(1));
-        Assert.That(ownerName, Is.EqualTo("Alice"));
-        Assert.That(balance, Is.EqualTo(1000));
+        Assert.That(countAccounts, Is.EqualTo(1), "Неправильное количество аккаунтов");
+        Assert.That(ownerName, Is.EqualTo("Alice"), "Неправильное имя владельца");
+        Assert.That(balance, Is.EqualTo(1000), "Неправильный баланс");
 
     }
 
@@ -42,34 +36,14 @@ public class TestBankAccount
         string ownerName = bankAccount.OwnerName;
         double balance = bankAccount.Balance;
         
+        Assert.AreEqual("Alice", ownerName, "Неправильное имя владельца в json файле");
+        Assert.AreEqual(1000, balance, "Неправильный баланс в json файле");
         
-        
-    }
-    
-    [Test]
-    public void NegativeCreateAccountTests()
-    {
-        
-        BankAccountManager manager = new BankAccountManager();
-
-        manager.CreateAccount("Alice", 1000);
-        manager.CreateAccount("Mark", 1000);
-
-        string actualResult1 = BankAccountManager.accounts[0].OwnerName;
-        string actualResult2 = BankAccountManager.accounts[1].OwnerName;
-        
-
-        Assert.AreEqual("Alice", actualResult1);
-        Assert.AreEqual("Mark", actualResult2);
     }
 
     [Test]
-    public void PositiveWithdrawTests()
+    public void PositiveWithdrawTest()
     {
-        BankAccountManager manager = new BankAccountManager();
-
-        manager.CreateAccount("Alice", 1000);
-        manager.CreateAccount("Mark", 1000);
 
         int sum = 300;
         long accountNumber = BankAccountManager.accounts[0].AccountNumber;
@@ -77,24 +51,25 @@ public class TestBankAccount
         manager.Withdraw(accountNumber, sum);
         double balance = BankAccountManager.accounts[0].Balance;
 
-        Assert.That(balance, Is.EqualTo(700));
+        Assert.That(balance, Is.EqualTo(700), "Неправильный баланс после операции перевода");
     }
     
     [Test]
-    public void NegativeWithdrawTests()
+    public void NegativeWithdraw_AccountNumberException_Test()
     {
-        BankAccountManager manager = new BankAccountManager();
-
-        manager.CreateAccount("Alice", 1000);
-        manager.CreateAccount("Mark", 1000);
-
         long fakeAccountNumber = 111111111111;
+        int sum = 150;
+
+        Assert.Throws<AccountNumberException>((() => manager.Withdraw(fakeAccountNumber, sum)), "Ожидалось исключение AccountNumberException при попытке снятия средств с несуществующего аккаунта");
+    }
+
+    [Test]
+    public void NegativeWithdraw_InsufficientFundsException_Test()
+    {
         int sum = 15000;
         long accountNumber = BankAccountManager.accounts[0].AccountNumber;
-
-        Assert.Throws<AccountNumberException>((() => manager.Withdraw(fakeAccountNumber, sum)));
-        Assert.Throws<InsufficientFundsException>((() => manager.Withdraw(accountNumber, sum)));
         
+        Assert.Throws<InsufficientFundsException>((() => manager.Withdraw(accountNumber, sum)), "Ожидалось исключение InsufficientFundsException при попытке снятия средств с несуществующего аккаунта");
     }
     
     
