@@ -3,7 +3,7 @@ namespace BankAccountWithDelegates;
 /// <summary>
 /// класс логгер 
 /// </summary>
-public class BankAccountLogger
+public class Logger
 {
     /// <summary>
     /// лог информации

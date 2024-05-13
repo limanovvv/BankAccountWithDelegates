@@ -13,94 +13,137 @@ class ProgramBA
             {
 
                 BankAccountManager manager = new BankAccountManager();
+            long accNumber;
 
-                manager.CreateAccount("Alice", 1000);
-                manager.CreateAccount("Mark", 1000);
+            Console.WriteLine("Вы являетесь нашим клиентом? y - да n - нет");
+            var choise = char.ToLower(char.Parse(Console.ReadLine()));
 
-                long firstAccountNumber = BankAccountManager.accounts[0].AccountNumber;
-                long secondAccountNumber = BankAccountManager.accounts[1].AccountNumber;
-
-                do
+            if (choise == 'n')
+            {
+                Console.WriteLine("Создадим счет, Введите ваше Имя");
+                accNumber = manager.CreateAccount(Console.ReadLine(), 0);
+            }
+            else
+            {
+                while (true)
                 {
-                    Console.WriteLine("Выберите операцию: 1 - Deposit 2 - Withdraw, 3 - Transfer");
-
-                    var choise = Int16.Parse(Console.ReadLine());
-
-                    switch (choise)
+                    try
                     {
-                    case 1:
-                    
-                        try
-                        {
-                            manager.Deposit(firstAccountNumber, 500);
-                        }
-                        catch (AccountNumberException accountNumberException)
-                        {
-                            Console.WriteLine(accountNumberException.Message);
-                        }
-                        catch (JsonException jsonException)
-                        {
-                            Console.WriteLine(jsonException.Message);
-                        }
-                        catch (IOException ioException)
-                        {
-                            Console.WriteLine(ioException.Message);
-                        }
-                    
-                        manager.PrintBalance(firstAccountNumber);
-                        flag = true;
-                    
+                        Console.WriteLine("Введите номер счета");
+                        accNumber = manager.GetAccount(long.Parse(Console.ReadLine())).AccountNumber;
                         break;
-                    case 2:
-                    
-                        try
-                        {
-                            manager.Withdraw(firstAccountNumber, 200);
-                        }
-                        catch (AccountNumberException accountNumberException)
-                        {
-                            Console.WriteLine(accountNumberException.Message);
-                        }
-                        catch (InsufficientFundsException insufficientFundsException)
-                        {
-                            Console.WriteLine(insufficientFundsException.Message);
-                            Console.WriteLine($"Ваш баланс:  {insufficientFundsException.Sum}");
-                        }
-                        catch (JsonException jsonException)
-                        {
-                            Console.WriteLine(jsonException.Message);
-                        }
-                        catch (IOException ioException)
-                        {
-                            Console.WriteLine(ioException.Message);
-                        }
-                    
-                        manager.PrintBalance(firstAccountNumber);
-                        flag = true;
-                    
-                        break;
-                    case 3:
-                    
-                        try
-                        {
-                            manager.Transfer(firstAccountNumber, secondAccountNumber, 300);
+                    }
+                    catch (Exception)
+                    {
+                        Console.WriteLine("Такого счета не существует");
 
-                        }
-                        catch (AccountNumberException accountNumberException)
+                    }
+                }
+            }
+
+
+            do
+            {
+                    
+                Console.WriteLine("Выберите операцию: 1 - Deposit 2 - Withdraw, 3 - Transfer, 4 - exit");
+
+                    var operation = Int16.Parse(Console.ReadLine());
+
+                    switch (operation)
+                    {
+                        case 1:
+                    
+                            try
+                            {
+                            Console.WriteLine("сумма пополнения");
+                            manager.Deposit(accNumber, Int16.Parse(Console.ReadLine()));
+                            }
+                            catch (AccountNumberException accountNumberException)
+                            {
+                                Console.WriteLine(accountNumberException.Message);
+                            }
+                            catch (JsonException jsonException)
+                            {
+                                Console.WriteLine(jsonException.Message);
+                            }
+                            catch (IOException ioException)
+                            {
+                                Console.WriteLine(ioException.Message);
+                            }
+                    
+                            manager.PrintBalance(accNumber);
+                    
+                            break;
+                        case 2:
+                    
+                            try
+                            {
+                            Console.WriteLine("сумма");
+                            manager.Withdraw(accNumber, Int16.Parse(Console.ReadLine()));
+                            }
+                            catch (AccountNumberException accountNumberException)
+                            {
+                                Console.WriteLine(accountNumberException.Message);
+                            }
+                            catch (InsufficientFundsException insufficientFundsException)
+                            {
+                                Console.WriteLine(insufficientFundsException.Message);
+                                Console.WriteLine($"Ваш баланс:  {insufficientFundsException.Sum}");
+                            }
+                            catch (JsonException jsonException)
+                            {
+                                Console.WriteLine(jsonException.Message);
+                            }
+                            catch (IOException ioException)
+                            {
+                                Console.WriteLine(ioException.Message);
+                            }
+                    
+                            manager.PrintBalance(accNumber);
+                    
+                            break;
+                        case 3:
+
+                        long secondAccountNumber;
+
+                        while (true)
                         {
-                            Console.WriteLine(accountNumberException.Message);
+                            try
+                            {
+                                Console.WriteLine("Введите номер счета");
+                                secondAccountNumber = manager.GetAccount(long.Parse(Console.ReadLine())).AccountNumber;
+                                break;
+                            }
+                            catch (Exception)
+                            {
+                                Console.WriteLine("Такого счета не существует");
+
+                            }
                         }
+
+                        try
+                            {
+                            Console.WriteLine("сумма");
+                            manager.Transfer(accNumber, secondAccountNumber, Int16.Parse(Console.ReadLine()));
+
+                            }
+                            catch (AccountNumberException accountNumberException)
+                            {
+                                Console.WriteLine(accountNumberException.Message);
+                            }
                     
-                        manager.PrintBalance(firstAccountNumber);
-                        manager.PrintBalance(secondAccountNumber);
+                            manager.PrintBalance(accNumber);
+                            manager.PrintBalance(secondAccountNumber);
+                    
+                            break;
+                    case 4:
                         flag = true;
-                    
                         break;
                     default:
                         
-                        Console.WriteLine("Неправильно выбрана операция 1 - Deposit 2 - Withdraw, 3 - Transfer");
+                            Console.WriteLine("Неправильно выбрана операция 1 - Deposit 2 - Withdraw, 3 - Transfer");
                         
-                        break;
+                            break;
                     }
                 } while (!flag);
 

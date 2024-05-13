@@ -12,48 +12,48 @@ public static class CalculatorProgram
         while (flag)
         {
             Console.WriteLine("Введите первое число:");
-            BankAccountLogger.LogInfo("Калькулятор. Просим ввести первое число");
+            Logger.LogInfo("Калькулятор. Просим ввести первое число");
 
             try
             {
-                BankAccountLogger.LogInfo("Калькулятор. Парсим первое число");
+                Logger.LogInfo("Калькулятор. Парсим первое число");
                 number1 = double.Parse(Console.ReadLine());
                 
             }
             catch (Exception e)
             {
-                BankAccountLogger.LogError("ошибка при парсинге первого числа");
+                Logger.LogError("ошибка при парсинге первого числа");
                 throw;
             }
 
             Console.WriteLine("Выберите операцию + - * / "); 
-            BankAccountLogger.LogInfo("Калькулятор. Просим ввести операцию");
+            Logger.LogInfo("Калькулятор. Просим ввести операцию");
 
 
             try
             {
-                BankAccountLogger.LogInfo("Калькулятор. Парсим операцию");
+                Logger.LogInfo("Калькулятор. Парсим операцию");
                 operation = char.Parse(Console.ReadLine());
                 
             }
             catch (Exception e)
             {
-                BankAccountLogger.LogError("ошибка при парсинге операции");
+                Logger.LogError("ошибка при парсинге операции");
                 throw;
             }
 
             Console.WriteLine("Введите второе число:");
-            BankAccountLogger.LogInfo("Калькулятор. Просим ввести второе число");
+            Logger.LogInfo("Калькулятор. Просим ввести второе число");
 
             try
             {
-                BankAccountLogger.LogInfo("Калькулятор. Парсим второе число");
+                Logger.LogInfo("Калькулятор. Парсим второе число");
                 number2 = double.Parse(Console.ReadLine());
                 
             }
             catch (Exception e)
             {
-                BankAccountLogger.LogError("ошибка при парсинге второго числа");
+                Logger.LogError("ошибка при парсинге второго числа");
                 throw;
             }
 
@@ -62,19 +62,19 @@ public static class CalculatorProgram
                 case '+':
 
                     CalculatorWithDelegates.Do(number1, number2, CalculatorWithDelegates.Add);
-                    BankAccountLogger.LogInfo("Калькулятор. Складываем");
+                    Logger.LogInfo("Калькулятор. Складываем");
 
                     break;
                 case '-':
 
                     CalculatorWithDelegates.Do(number1, number2, CalculatorWithDelegates.Substract);
-                    BankAccountLogger.LogInfo("Калькулятор. Вычитаем");
+                    Logger.LogInfo("Калькулятор. Вычитаем");
 
                     break;
                 case '*':
 
                     CalculatorWithDelegates.Do(number1, number2, CalculatorWithDelegates.Multiply);
-                    BankAccountLogger.LogInfo("Калькулятор. Умножаем");
+                    Logger.LogInfo("Калькулятор. Умножаем");
 
                     break;
                 case '/':
@@ -82,11 +82,11 @@ public static class CalculatorProgram
                     try
                     {
                         CalculatorWithDelegates.Do(number1, number2, CalculatorWithDelegates.Divide);
-                        BankAccountLogger.LogInfo("Калькулятор. Делим");
+                        Logger.LogInfo("Калькулятор. Делим");
                     }
                     catch (DivideByZeroException e)
                     {
-                        BankAccountLogger.LogError("Калькулятор. Ошибка. Нельзя делить на нуль");
+                        Logger.LogError("Калькулятор. Ошибка. Нельзя делить на нуль");
                         Console.WriteLine(e);
                     }
 
@@ -94,7 +94,7 @@ public static class CalculatorProgram
                 default:
 
                     Console.WriteLine("Операция была введена неккоректно + - * / ");
-                    BankAccountLogger.LogInfo("Калькулятор. Операция была введена неккоректно");
+                    Logger.LogInfo("Калькулятор. Операция была введена неккоректно");
 
                     break;
             }
