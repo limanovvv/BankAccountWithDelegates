@@ -11,47 +11,48 @@ public static class CalculatorProgram
 
         while (flag)
         {
-            Console.WriteLine("Введите первое число:");
-            Logger.LogInfo("Калькулятор. Просим ввести первое число");
+            
 
             try
             {
+                Console.WriteLine("Введите первое число:");
+                Logger.LogInfo("Калькулятор. Просим ввести первое число");
+                
                 Logger.LogInfo("Калькулятор. Парсим первое число");
                 number1 = double.Parse(Console.ReadLine());
                 
             }
-            catch (Exception e)
+            catch (FormatException)
             {
                 Logger.LogError("ошибка при парсинге первого числа");
                 throw;
             }
 
-            Console.WriteLine("Выберите операцию + - * / "); 
-            Logger.LogInfo("Калькулятор. Просим ввести операцию");
-
-
             try
             {
+                Console.WriteLine("Выберите операцию + - * / "); 
+                Logger.LogInfo("Калькулятор. Просим ввести операцию");
+                
                 Logger.LogInfo("Калькулятор. Парсим операцию");
                 operation = char.Parse(Console.ReadLine());
                 
             }
-            catch (Exception e)
+            catch (FormatException)
             {
                 Logger.LogError("ошибка при парсинге операции");
                 throw;
             }
 
-            Console.WriteLine("Введите второе число:");
-            Logger.LogInfo("Калькулятор. Просим ввести второе число");
-
             try
             {
+                Console.WriteLine("Введите второе число:");
+                Logger.LogInfo("Калькулятор. Просим ввести второе число");
+                
                 Logger.LogInfo("Калькулятор. Парсим второе число");
                 number2 = double.Parse(Console.ReadLine());
                 
             }
-            catch (Exception e)
+            catch (FormatException)
             {
                 Logger.LogError("ошибка при парсинге второго числа");
                 throw;
@@ -98,12 +99,20 @@ public static class CalculatorProgram
 
                     break;
             }
-            
-            Console.WriteLine("Желаете продолжить калькулятор? y - да n - нет");
-            var choise = char.ToLower(char.Parse(Console.ReadLine()));
 
-            if (choise == 'y') flag = true;
-            else flag = false;
+            try
+            {
+                Console.WriteLine("Желаете продолжить калькулятор? y - да n - нет");
+                var choise = char.ToLower(char.Parse(Console.ReadLine()));
+                
+                if (choise == 'y') flag = true;
+                else flag = false;
+            }
+            catch (FormatException e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
             
         }
     }

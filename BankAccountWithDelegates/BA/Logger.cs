@@ -33,7 +33,7 @@ public class Logger
         try
         {
             string filePath = "log.txt";
-            using (StreamWriter writer = new StreamWriter(filePath))
+            using (StreamWriter writer = new StreamWriter(filePath, append:true))
             {
                 writer.WriteLine($"{DateTime.Now} - {message}");
             }
