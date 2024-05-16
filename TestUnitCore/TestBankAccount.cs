@@ -11,20 +11,28 @@ public class TestBankAccount
     
     
     
-    [Test]
+    [Test(Description = "Проверка создания аккаунта. Увеличение количества аккаунтов на 1. Правильное имя и баланс.")]
     public void PositiveCreateAccountTests()
     {
+        int previousAccountsCount = BankAccountManager.accounts.Count;
+        
         manager.CreateAccount("Alice", 1000);
         
-        int countAccounts = BankAccountManager.accounts.Count;
-        string ownerName = BankAccountManager.accounts[0].OwnerName;
-        double balance = BankAccountManager.accounts[0].Balance;
+        int accountsCount = BankAccountManager.accounts.Count;
 
-        Assert.That(countAccounts, Is.EqualTo(1), "Неправильное количество аккаунтов");
-        Assert.That(ownerName, Is.EqualTo("Alice"), "Неправильное имя владельца");
-        Assert.That(balance, Is.EqualTo(1000), "Неправильный баланс");
-
+        Assert.That(accountsCount, Is.EqualTo(previousAccountsCount + 1), "Неправильное количество аккаунтов");
+        
+        Assert.Multiple(() =>
+            {
+                string ownerName = BankAccountManager.accounts[accountsCount - 1].OwnerName;
+                double balance = BankAccountManager.accounts[accountsCount - 1].Balance;
+        
+                Assert.That(ownerName, Is.EqualTo("Alice"), "Неправильное имя владельца");
+                Assert.That(balance, Is.EqualTo(1000), "Неправильный баланс");
+            });
+        
     }
+    
 
     [Test]
     public void PositiveCreateAccountJsonTests()

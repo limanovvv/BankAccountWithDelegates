@@ -85,7 +85,7 @@ public class BankAccountManager
 
             if (initialBalance < 0)
             {
-                throw new ArgumentException("Некорректная сумма счета");
+                throw new ArgumentException("Некорректная сумма баланса");
             }
 
             BankAccount newAccount = new BankAccount
@@ -102,7 +102,7 @@ public class BankAccountManager
             Logger.LogInfo("добавляем в лист новый объект");
             
             string json = JsonConvert.SerializeObject(accounts);
-            Logger.LogInfo("сериализуем этот новый объект в json-сроку");
+            Logger.LogInfo("сериализуем лист с этим новым объектом в json-сроку");
 
             File.WriteAllText(JsonFile, json);
             Logger.LogInfo("записываем в файл JsonFile json-строку");
@@ -119,7 +119,7 @@ public class BankAccountManager
             Logger.LogError($"Произошла ошибка ввода-вывода в методе CreateAccount: {e.Message}");
             throw;
         }
-    } 
+    }
     
     /// <summary>
     /// операция депозит - зачисление средств на счет
