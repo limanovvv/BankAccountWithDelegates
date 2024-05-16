@@ -90,7 +90,7 @@ public class BankAccountManager
 
             BankAccount newAccount = new BankAccount
             {
-                AccountNumber = GetGeteratedAccountNumber(AccountNumberLength),
+                AccountNumber = GetGeneratedAccountNumber(AccountNumberLength),
                 OwnerName = ownerName,
                 Balance = initialBalance
                 
@@ -172,6 +172,15 @@ public class BankAccountManager
     /// <exception cref="InsufficientFundsException"> недостаточно средств</exception>
     public void Withdraw(long accountNumber, double amount)
     {
+        if (amount < 0)
+        {
+            throw new ArgumentException("Отрицательная сумма снятия");
+        }
+        if (amount != AccountNumberLength)
+        {
+            throw new AccountNumberException("Ошибка номера аккаунта. Некорректное количество символов");
+        }
+        
         BankOperation withdraw = (accNum, amt) =>
         {
             var account = accounts.Find(acc => acc.AccountNumber == accNum);
@@ -246,7 +255,7 @@ public class BankAccountManager
     /// </summary>
     /// <param name="length"> сколько цифр нужно сгенерировать </param>
     /// <returns> рандомная последовательность цифр </returns>
-    private long GetGeteratedAccountNumber(int length)
+    private long GetGeneratedAccountNumber(int length)
     {
         Random random = new Random();
         string str = String.Empty;

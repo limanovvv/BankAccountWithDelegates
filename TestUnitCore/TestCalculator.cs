@@ -32,8 +32,8 @@ public class TestCalculator
             default:
                 throw new ArgumentException("Неподдерживаемая операция", nameof(operation));
         }
-        
-        Assert.AreEqual(expectedResult, actualResult);
-            
+
+        Assert.Equals(expectedResult, actualResult);
+
     }
 }
