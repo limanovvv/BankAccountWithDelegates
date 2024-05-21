@@ -176,7 +176,7 @@ public class BankAccountManager
         {
             throw new ArgumentException("Отрицательная сумма снятия");
         }
-        if (amount != AccountNumberLength)
+        if (accountNumber.ToString().Length != AccountNumberLength)
         {
             throw new AccountNumberException("Ошибка номера аккаунта. Некорректное количество символов");
         }

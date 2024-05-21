@@ -33,7 +33,7 @@ public class TestCalculator
                 throw new ArgumentException("Неподдерживаемая операция", nameof(operation));
         }
 
-        Assert.Equals(expectedResult, actualResult);
+        Assert.AreEqual(expectedResult, actualResult);
 
     }
 }

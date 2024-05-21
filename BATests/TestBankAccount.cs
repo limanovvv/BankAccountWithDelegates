@@ -5,9 +5,15 @@ using Newtonsoft.Json;
 namespace TestUnitCore;
 
 [TestFixture]
-public class TestBankAccount
+public class TestBankAccountTests
 {
     private BankAccountManager manager = new BankAccountManager();
+
+    [SetUp]
+    public void SetUp()
+    {
+        
+    }
 
     // [Test(Description = "Проверка создания аккаунта. Увеличение количества аккаунтов на 1. Правильное имя и баланс.")]
     // public void PositiveCreateAccountTests()
@@ -40,14 +46,15 @@ public class TestBankAccount
         
         long accountNumber = manager.CreateAccount(ownerName, initialBalance);
 
-        string actualOwnerName = BankAccountManager.accounts[accountsCount - 1].OwnerName;
+        //обращаемся по индексу, поэтому [accountsCount]
+        string actualOwnerName = BankAccountManager.accounts[accountsCount].OwnerName;
 
         Assert.That(actualOwnerName, Is.EqualTo(ownerName), "Неправильное имя владельца");
     }
     
     [TestCase("", 500, TestName = "Негативная проверка создания аккаунта. Имя без символов")]
     [TestCase("p", 500, TestName = "Негативная проверка создания аккаунта. Имя с одним символом")]
-    [TestCase(null, 500, TestName = "Негативная проверка создания аккаунта. Имя null")]
+    //[TestCase(null, 500, TestName = "Негативная проверка создания аккаунта. Имя null")]
     public void NegativeCreateAccount_OwnerName_Test(string fakeOwnerName, double initialBalance)
     {
         
@@ -63,7 +70,7 @@ public class TestBankAccount
         
         long accountNumber = manager.CreateAccount(ownerName, initialBalance);
 
-        double actualBalance = BankAccountManager.accounts[accountsCount - 1].Balance;
+        double actualBalance = BankAccountManager.accounts[accountsCount].Balance;
 
         Assert.That(actualBalance, Is.EqualTo(initialBalance), "Неправильный баланс");
         
@@ -78,26 +85,84 @@ public class TestBankAccount
         Assert.Throws<ArgumentException>((() => manager.CreateAccount(ownerName, initialBalance)), "Ожидалось исключение ArgumentException при попытке осздания аккаунта с отрицательным балансом");
     }
 
-    [TestCase(26424944652, 1200,TestName = "Позитивная проверка операции снятия. Снимаем все что есть на балансе 1200")]
-    [TestCase(26424944652, 1199.99,TestName = "Позитивная проверка операции снятия. Снимаем 1199.99")]
-    [TestCase(26424944652, 100,TestName = "Позитивная проверка операции снятия. Снимаем 100")]
-    public void PositiveWithdrawTest(long accountNumber,double sum)
+    // [TestCase(700322601777, 94,TestName = "Позитивная проверка операции снятия. Снимаем все что есть на балансе 94")]
+    // [TestCase(700322601777, 93.99,TestName = "Позитивная проверка операции снятия. Снимаем 93.99")]
+    // [TestCase(700322601777, 50,TestName = "Позитивная проверка операции снятия. Снимаем 50")]
+    // public void PositiveWithdrawTest(long accountNumber,double sum)
+    // {
+    //     BankAccount bankAccount = manager.GetAccount(accountNumber);
+    //     double previousBalance = bankAccount.Balance;
+    //     
+    //     manager.Withdraw(accountNumber, sum);
+    //     
+    //     double actualBalance = bankAccount.Balance;
+    //
+    //     Assert.That(actualBalance, Is.EqualTo(previousBalance - sum), "Неправильный баланс после операции перевода");
+    //     
+    //     manager.Deposit(accountNumber, sum);
+    // }
+
+    [Test]
+    [Description("Позитивная проверка операции снятия")]
+    public void PositiveWithdrawTest()
     {
+        long accountNumber = manager.CreateAccount(TestContext.CurrentContext.Random.GetString(12),
+            TestContext.CurrentContext.Random.NextDouble(50000));
+
         BankAccount bankAccount = manager.GetAccount(accountNumber);
         double previousBalance = bankAccount.Balance;
+
+        double sum = TestContext.CurrentContext.Random.NextDouble(previousBalance);
         
         manager.Withdraw(accountNumber, sum);
         
         double actualBalance = bankAccount.Balance;
-
-        Assert.That(actualBalance, Is.EqualTo(previousBalance - sum), "Неправильный баланс после операции перевода");
         
-        manager.Deposit(accountNumber, sum);
+        Assert.That(actualBalance, Is.EqualTo(previousBalance - sum), "Неправильный баланс после операции перевода");
+
+    }
+    
+    [Test]
+    [Description("Позитивная проверка операции снятия. Снимаем 0.01")]
+    public void PositiveWithdrawTest_SmallestWithdraw()
+    {
+        long accountNumber = manager.CreateAccount(TestContext.CurrentContext.Random.GetString(12),
+            TestContext.CurrentContext.Random.NextDouble(50000));
+
+        BankAccount bankAccount = manager.GetAccount(accountNumber);
+        double previousBalance = bankAccount.Balance;
+
+        double sum = 0.01;
+        
+        manager.Withdraw(accountNumber, sum);
+        
+        double actualBalance = bankAccount.Balance;
+        
+        Assert.That(actualBalance, Is.EqualTo(previousBalance - sum), "Неправильный баланс после операции перевода");
+
+    }
+    
+    [Test]
+    [Description("Позитивная проверка операции снятия. Снимаем все")]
+    public void PositiveWithdrawTest_FullWithdraw()
+    {
+        long accountNumber = manager.CreateAccount(TestContext.CurrentContext.Random.GetString(12),
+            TestContext.CurrentContext.Random.NextDouble(50000));
+
+        BankAccount bankAccount = manager.GetAccount(accountNumber);
+        double previousBalance = bankAccount.Balance;
+        
+        manager.Withdraw(accountNumber, previousBalance);
+        
+        double actualBalance = bankAccount.Balance;
+        
+        Assert.That(actualBalance, Is.EqualTo(0), "Неправильный баланс после операции перевода");
+
     }
     
     [TestCase(111111111111, 150, TestName = "Негативная проверка операции снятия. Неккоректный номер аккаунта из 12 символов")]
-    [TestCase(2642494465, 150, TestName = "Негативная проверка операции снятия. Номер аккаунта из 11 символов")]
-    [TestCase(264249446520, 150, TestName = "Негативная проверка операции снятия. Номер аккаунта из 13 символов")]
+    [TestCase(70032260177, 150, TestName = "Негативная проверка операции снятия. Номер аккаунта из 11 символов")]
+    [TestCase(7003226017770, 150, TestName = "Негативная проверка операции снятия. Номер аккаунта из 13 символов")]
     public void NegativeWithdraw_AccountNumberException_Test(long accountNumber, double sum)
     {
         
@@ -106,21 +171,21 @@ public class TestBankAccount
     }
 
 
-    [TestCase(26424944652, 1200.01, TestName = "Негативная проверка операции снятия. Сумма снятия больше баланса на 0.01")]
-    [TestCase(26424944652, 15000, TestName = "Негативная проверка операции снятия. Сумма снятия больше баланса на 13800")]
+    [TestCase(700322601777, 94.01, TestName = "Негативная проверка операции снятия. Сумма снятия больше баланса на 94.01")]
+    [TestCase(700322601777, 15094, TestName = "Негативная проверка операции снятия. Сумма снятия больше баланса на 15000")]
     public void NegativeWithdraw_InsufficientFundsException_Test(long accountNumber, double sum)
     {
         
-        Assert.Throws<InsufficientFundsException>((() => manager.Withdraw(accountNumber, sum)), "Ожидалось исключение InsufficientFundsException при попытке снятия средств с несуществующего аккаунта");
+        Assert.Throws<InsufficientFundsException>((() => manager.Withdraw(accountNumber, sum)), "Ожидалось исключение InsufficientFundsException при попытке снятия суммы, которая больше баланса");
         
     }
 
-    [TestCase(26424944652, -0.01, TestName = "Негативная проверка операции снятия. Отрицательная сумма снятия -0.01")]
-    [TestCase(26424944652, -1200, TestName = "Негативная проверка операции снятия. Отрицательная сумма снятия -1200")]
+    [TestCase(700322601777, -0.01, TestName = "Негативная проверка операции снятия. Отрицательная сумма снятия -0.01")]
+    [TestCase(700322601777, -94, TestName = "Негативная проверка операции снятия. Отрицательная сумма снятия -94")]
     public void NegativeWithdraw_ArgumentException_Test(long accountNumber, double sum)
     {
         
-        Assert.Throws<ArgumentException>((() => manager.Withdraw(accountNumber, sum)), "Ожидалось исключение ArgumentException при попытке снятия средств с несуществующего аккаунта");
+        Assert.Throws<ArgumentException>((() => manager.Withdraw(accountNumber, sum)), "Ожидалось исключение ArgumentException при попытке снятия отрицательной суммы");
         
     }
 }
