@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using BankAccountWithDelegates.CreatedExceptions;
 using Newtonsoft.Json;
 
@@ -13,50 +17,109 @@ public delegate void BankOperation(long accountNumber, double amount);
 /// </summary>
 public class BankAccountManager
 {
-    
-    /// <summary>
-    /// приватный лист для хранения аккаунтов
-    /// </summary>
-    public List<BankAccount> accounts = new List<BankAccount>();
-
     /// <summary>
     /// имя json файла для хранения аккаунтов
     /// </summary>
-    private const string JsonFile = "jsonForBankAccounts";
-    
+    public static string JsonFile = Path.GetFullPath(AppDomain.CurrentDomain + "/../../../../../jsonForBankAccounts.json");
+
+    static BankAccountManager()
+    {
+        List<BankAccount>? list;
+
+        if (File.Exists(JsonFile))
+        {
+            try
+            {
+                string str = File.ReadAllText(JsonFile);
+                accounts = JsonConvert.DeserializeObject<List<BankAccount>>(str);
+            }
+            catch (JsonException)
+            {
+                accounts = new List<BankAccount>();
+            }
+        }
+        else
+        {
+            accounts = new List<BankAccount>();
+        }
+    }
+
+
+    /// <summary>
+    /// лист для хранения аккаунтов
+    /// </summary>
+    public static List<BankAccount>? accounts { get; }
+
     /// <summary>
     /// длина банковского счета
     /// по заданию равная 12
     /// </summary>
     private const int AccountNumberLength = 12;
 
+    public BankAccount GetAccount(long accountNumber)
+    {
+        try
+        {
+            return accounts.Single(e => e.AccountNumber == accountNumber);
+        }
+        catch (AccountNumberException)
+        {
+            throw;
+        }
+    }
+
+
     /// <summary>
     /// создание аккаунта через менеджер
     /// </summary>
     /// <param name="ownerName"> владелец аккаунта </param>
     /// <param name="initialBalance"> начальный баланс </param>
-    public void CreateAccount(string ownerName, double initialBalance)
+    public long CreateAccount(string ownerName, double initialBalance)
     {
         try
         {
+            if (ownerName == null || ownerName.ToCharArray().Count() < 2)
+            {
+                throw new ArgumentException("Некорректное имя пользователя");
+            }
+
+            if (initialBalance < 0)
+            {
+                throw new ArgumentException("Некорректная сумма баланса");
+            }
+
             BankAccount newAccount = new BankAccount
             {
-                AccountNumber = GetGeteratedAccountNumber(AccountNumberLength),
+                AccountNumber = GetGeneratedAccountNumber(AccountNumberLength),
                 OwnerName = ownerName,
-                Balance = initialBalance,
+                Balance = initialBalance
                 
             };
 
-            string json = JsonConvert.SerializeObject(newAccount);
-            File.WriteAllText(JsonFile, json);
+            Logger.LogInfo("в методе CreateAccount первым делом создался новый объект BankAccount");
 
             accounts.Add(newAccount);
+            Logger.LogInfo("добавляем в лист новый объект");
+            
+            string json = JsonConvert.SerializeObject(accounts);
+            Logger.LogInfo("сериализуем лист с этим новым объектом в json-сроку");
+
+            File.WriteAllText(JsonFile, json);
+            Logger.LogInfo("записываем в файл JsonFile json-строку");
+
+            return newAccount.AccountNumber;
         }
-        catch (Exception e)
+        catch (JsonException e)
         {
-            Console.WriteLine(e);
+            Logger.LogError($"Произошла ошибка при сериализации в JSON в методе CreateAccount: {e.Message}");
+            throw;
         }
-    } 
+        catch (IOException e)
+        {
+            Logger.LogError($"Произошла ошибка ввода-вывода в методе CreateAccount: {e.Message}");
+            throw;
+        }
+    }
     
     /// <summary>
     /// операция депозит - зачисление средств на счет
@@ -72,17 +135,30 @@ public class BankAccountManager
             BankOperation deposit = (accNum, amt) =>
             {
                 var account = accounts.Find(acc => acc.AccountNumber == accNum);
-                if (account != null) account.Balance += amt;
+                if (account != null)
+                {
+                    account.Balance += amt;
+
+                    string json = JsonConvert.SerializeObject(accounts);
+                    File.WriteAllText(JsonFile, json);
+                    
+                    Logger.LogInfo($"Зачисление средств на счет\n номер аккаунта: {accountNumber}\n сумма зачисления {amount}\n баланс {account.Balance}");
+                }
                 
-                BankAccountLogger.LogInfo($"Зачисление средств на счет\n номер аккаунта: {accountNumber}\n сумма зачисления {amount}\n баланс {account.Balance}");
             };
 
             deposit(accountNumber, amount);
             
         }
-        catch (Exception e)
+        catch (JsonException e)
         {
-            Console.WriteLine(e);
+            Logger.LogError($"Произошла ошибка при сериализации в JSON в методе Deposit: {e.Message}");
+            throw;
+        }
+        catch (IOException e)
+        {
+            Logger.LogError($"Произошла ошибка ввода-вывода в методе Deposit: {e.Message}");
+            throw;
         }
     }
     
@@ -96,6 +172,15 @@ public class BankAccountManager
     /// <exception cref="InsufficientFundsException"> недостаточно средств</exception>
     public void Withdraw(long accountNumber, double amount)
     {
+        if (amount < 0)
+        {
+            throw new ArgumentException("Отрицательная сумма снятия");
+        }
+        if (accountNumber.ToString().Length != AccountNumberLength)
+        {
+            throw new AccountNumberException("Ошибка номера аккаунта. Некорректное количество символов");
+        }
+        
         BankOperation withdraw = (accNum, amt) =>
         {
             var account = accounts.Find(acc => acc.AccountNumber == accNum);
@@ -103,21 +188,25 @@ public class BankAccountManager
             switch (account)
             {
                 case null:
-                    BankAccountLogger.LogError($"Ошибка! Снятие средств со счета\n Ошибка номера аккаунта. Номера {amount} не существует\n");
+                    Logger.LogError($"Ошибка! Снятие средств со счета\n Ошибка номера аккаунта. Номера {amount} не существует\n");
                     throw new AccountNumberException($"Ошибка номера аккаунта. Номера {amount} не существует");
                 
                 default:
                 {
                     if (account.Balance < amount)
                     {
-                        BankAccountLogger.LogError($"Ошибка! Снятие средств со счета\n Недостаточно средств на счете\n номер: {amount}\n баланс: {account.Balance}");
+                        Logger.LogError($"Ошибка! Снятие средств со счета\n Недостаточно средств на счете\n номер: {amount}\n баланс: {account.Balance}");
                         
                         throw new InsufficientFundsException("Недостаточно средств на счете", account.Balance);
                     }
                     else
                     {
                         account.Balance -= amount;
-                        BankAccountLogger.LogInfo($"Снятие средств со счета\n номер аккаунта: {accountNumber}\n сумма снятия {amount}\n баланс {account.Balance}");
+                        
+                        string json = JsonConvert.SerializeObject(accounts);
+                        File.WriteAllText(JsonFile, json);
+                        
+                        Logger.LogInfo($"Снятие средств со счета\n номер аккаунта: {accountNumber}\n сумма снятия {amount}\n баланс {account.Balance}");
                     }
 
                     break;
@@ -138,7 +227,7 @@ public class BankAccountManager
     public void Transfer(long fromAccountNumber, long toAccountNumber, double amount)
     {
         
-            BankAccountLogger.LogInfo($"Перевод\n номер аккаунта отправителя: {fromAccountNumber}\n номер аккаунта получателя {toAccountNumber}\n сумма перевода {amount}");
+            Logger.LogInfo($"Перевод\n номер аккаунта отправителя: {fromAccountNumber}\n номер аккаунта получателя {toAccountNumber}\n сумма перевода {amount}");
             Withdraw(fromAccountNumber, amount);
             Deposit(toAccountNumber, amount); 
             
@@ -166,7 +255,7 @@ public class BankAccountManager
     /// </summary>
     /// <param name="length"> сколько цифр нужно сгенерировать </param>
     /// <returns> рандомная последовательность цифр </returns>
-    private long GetGeteratedAccountNumber(int length)
+    private long GetGeneratedAccountNumber(int length)
     {
         Random random = new Random();
         string str = String.Empty;
